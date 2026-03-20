@@ -2,6 +2,7 @@ import e from "express";
 import mongoose from "mongoose";
 
 const app = e();
+app.use(e.json());
 
 let mongoUrl = "mongodb+srv://admin:123@main.mkocfh6.mongodb.net/?appName=Main"
 let connection = async ()=>{
