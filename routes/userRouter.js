@@ -1,9 +1,10 @@
 import e from "express";
-import { RegisterUser } from "../controllers/userController.js";
+import { getUser, RegisterUser } from "../controllers/userController.js";
 
 const userRouter = e.Router();
 
 userRouter.post("/new", RegisterUser);
+userRouter.get("/users", getUser);
 
 
 export default userRouter;

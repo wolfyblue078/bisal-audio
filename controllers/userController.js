@@ -30,3 +30,32 @@ export const RegisterUser = async (req,res)=>{
         })
     }
 }
+
+export const getUser = async(req,res)=>{
+
+    try{
+        //Pagination
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        let users = await User.find()
+        .select("-password")  // remove password field
+        .skip(skip)
+        .limit(limit);
+
+        console.log("Users retrieved succesfully 👥");
+
+        return res.status(200).json({
+            message: "Users retrieved successfully 👥",
+            page,
+            count: users.length,
+            users
+        })
+    } catch(err) {
+        console.log(err.message);
+        res.status(500).json({
+            message: err.message
+        })
+    }
+}
