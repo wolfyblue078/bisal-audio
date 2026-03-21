@@ -1,7 +1,6 @@
 import User from "../models/user.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { use } from "react";
 
 export const RegisterUser = async (req,res)=>{
     try {
@@ -103,6 +102,36 @@ export const loginUser = async (req,res)=>{
 
     } catch (error) {
         console.log(err.message);
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+export const authMiddleware = async (req,res,next)=>{
+    try {
+        let token = req.header("Authorization");
+
+        if (!token || !token.startsWith("Bearer ")) {
+            return res.status(401).json({
+                message: "No token provided 🚫"
+            });
+        }
+        token = token.replace("Bearer ", "");
+            
+        jwt.verify(token, "B_Secret_69", (error, decoded)=>{
+            if(error){
+                return res.status(403).json({
+                    message: "Unauthorized token!"
+                })
+            }else{
+                req.user= decoded;
+                next();
+            }
+        })
+        
+    } catch (error) {
+        console.log(error.message);
         res.status(500).json({
             message: error.message
         })
