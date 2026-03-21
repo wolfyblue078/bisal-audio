@@ -71,14 +71,14 @@ export const loginUser = async (req,res)=>{
         //check is user exists
         if(!user){
             return res.status(403).json({
-                message: "User not found !"
+                message: "invalid email or password 🔰"
             });
         }
 
         let isPasswordCorrect = await bcrypt.compare(data.password, user.password);
         if(!isPasswordCorrect){
             return res.status(403).json({
-                message: "Password is incorrect 😒"
+                message: "invalid email or password 🔰"
             })
         }
 
@@ -92,16 +92,19 @@ export const loginUser = async (req,res)=>{
             }, "B_Secret_69", {expiresIn: "2h"}
         )
 
+        const userResponse = user.toObject();
+        delete userResponse.password;
+
         return res.status(200).json({
             message: "User login successfully 👤✅",
             token: token,
-            user
+            userResponse
         })
 
     } catch (error) {
         console.log(err.message);
         res.status(500).json({
-            message: err.message
+            message: error.message
         })
     }
 }
